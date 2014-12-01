@@ -31,23 +31,17 @@ SolidCompression=yes
 Name: en; MessagesFile: "compiler:Default.isl"
 Name: fr; MessagesFile: "compiler:Languages\French.isl"
 
-[Tasks]
-Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
-Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0,6.1
-
 [Files]
 Source: "C:\project\Libreosteo\build\exe.win32-2.7\Libreosteo.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\project\Libreosteo\build\exe.win32-2.7\manager.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\project\Libreosteo\build\exe.win32-2.7\*.*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
+Source: "C:\project\Libreosteo\build\exe.win32-2.7\Libreosteo.url"; DestDir: "{app}"
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
 Name: "{group}\{#MyAppName} (Service)"; Filename: "{app}\{#MyAppExeName}"
-Name: "{group}\{#MyAppName} (Application)"; Filename: "{app}\Libreosteo (Application).url"
-Name: "{group}\{cm:ProgramOnTheWeb,{#MyAppName}}"; Filename: "{#MyAppURL}"
+Name: "{group}\{#MyAppName}"; Filename: "{app}\Libreosteo.url" ; IconFilename : "C:\project\logo1-grand.ico"
 Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
-Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
-Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: quicklaunchicon
 
 [CustomMessages]
 ; Français
@@ -74,8 +68,8 @@ en.installinguser=Creating the main user
 Name : inituser ; Description: {cm:inituser} ; Flags:checkedonce;
 
 [Run]
-Filename: "{app}\manager.exe"; Parameters: "migrate"; StatusMsg: "{cm:installingdb}";
-Filename: "{cmd}" ; Parameters: "/c echo from django.contrib.auth.models import User; User.objects.create_superuser('{code:GetLogin}', '', '{code:GetPassword}') | {app}\manager.exe shell"; StatusMsg: "{cm:installinguser}"; Tasks: inituser;
+Filename: "{app}\manager.exe"; Parameters: "migrate"; StatusMsg: "{cm:installingdb}"; Flags: runhidden;
+Filename: "{cmd}" ; Parameters: "/c echo from django.contrib.auth.models import User;User.objects.create_superuser('{code:GetLogin}', '', '{code:GetPassword}') | ""{app}\manager.exe"" ""shell"" "; StatusMsg: "{cm:installinguser}"; Tasks: inituser; Flags : runhidden;
 
 [code]
 var
@@ -102,7 +96,7 @@ end;
 
 function GetPassword(Param: String): String;
 begin
-  Result := Page.Values[3];
+  Result := Page.Values[1];
 end;
 
 function ShouldSkipPage(PageID: Integer): Boolean;
