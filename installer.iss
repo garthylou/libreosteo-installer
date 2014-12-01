@@ -40,7 +40,7 @@ Source: "C:\project\Libreosteo\build\exe.win32-2.7\Libreosteo.url"; DestDir: "{a
 
 [Icons]
 Name: "{group}\{#MyAppName} (Service)"; Filename: "{app}\{#MyAppExeName}"
-Name: "{group}\{#MyAppName}"; Filename: "{app}\Libreosteo.url" ; IconFilename : "C:\project\logo1-grand.ico"
+Name: "{group}\{#MyAppName}"; Filename: "{app}\Libreosteo.url" ; IconFilename : "{app}\static\images\icon.ico"
 Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
 
 [CustomMessages]
