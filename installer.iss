@@ -2,9 +2,9 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Libreosteo"
-#define MyAppVersion "0.1"
+#define MyAppVersion "0.2.1"
 #define MyAppPublisher "Libreosteo"
-#define MyAppURL "http://www.facebook.com/Libreosteo"
+#define MyAppURL "http://libreosteo.olympe.in"
 #define MyAppExeName "Libreosteo.exe"
 
 [Setup]
@@ -39,7 +39,7 @@ Source: "C:\project\Libreosteo\build\exe.win32-2.7\Libreosteo.url"; DestDir: "{a
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
-Name: "{group}\{#MyAppName} (Service)"; Filename: "{app}\{#MyAppExeName}"
+; Name: "{group}\{#MyAppName} (Service)"; Filename: "{app}\{#MyAppExeName}"
 Name: "{group}\{#MyAppName}"; Filename: "{app}\Libreosteo.url" ; IconFilename : "{app}\static\images\icon.ico"
 Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
 
@@ -53,6 +53,9 @@ fr.password=Mot de passe :
 fr.inituser=Initialiser l'utilisateur principal  (nouvelle installation uniquement)
 fr.installingdb=Installation ou mise à jour de la base de données
 fr.installinguser=Création de l'utilisateur principal
+fr.installingservice=Installation du service
+fr.startingservice=Démarrage du service
+fr.uninstallingservice=Désinstallation du service
 
 ;English
 en.mainusertitle=Main user
@@ -63,6 +66,9 @@ en.password=Password :
 en.inituser=Init the main user (new installation only)
 en.installingdb=Installing or updating database
 en.installinguser=Creating the main user
+en.installingservice=Installing the service
+en.startingservice=Starting the service
+en.uninstallingservice=Uninstalling the service
 
 [Tasks]
 Name : inituser ; Description: {cm:inituser} ; Flags:checkedonce;
@@ -70,6 +76,11 @@ Name : inituser ; Description: {cm:inituser} ; Flags:checkedonce;
 [Run]
 Filename: "{app}\manager.exe"; Parameters: "migrate"; StatusMsg: "{cm:installingdb}"; Flags: runhidden;
 Filename: "{cmd}" ; Parameters: "/c echo from django.contrib.auth.models import User;User.objects.create_superuser('{code:GetLogin}', '', '{code:GetPassword}') | ""{app}\manager.exe"" ""shell"" "; StatusMsg: "{cm:installinguser}"; Tasks: inituser; Flags : runhidden;
+Filename: "{app}\Libreosteo.exe"; Parameters: "--startup auto install"; StatusMsg: "{cm:installingservice}"; Flags: runhidden;
+Filename: "{app}\Libreosteo.exe"; Parameters: "start"; StatusMsg: "{cm:startingservice}"; Flags: runhidden;
+
+[UninstallRun]
+Filename: "{app}\Libreosteo.exe"; Parameters: "remove"; StatusMsg: "{cm:uninstallingservice}"; Flags: runhidden;
 
 [code]
 var
