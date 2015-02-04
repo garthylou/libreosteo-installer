@@ -32,7 +32,7 @@ Name: en; MessagesFile: "compiler:Default.isl"
 Name: fr; MessagesFile: "compiler:Languages\French.isl"
 
 [Files]
-Source: "C:\project\Libreosteo\build\exe.win32-2.7\Libreosteo.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\project\Libreosteo\build\exe.win32-2.7\Libreosteo.exe"; DestDir: "{app}"; AfterInstall: InstallLaunchServIni ; Flags: ignoreversion
 Source: "C:\project\Libreosteo\build\exe.win32-2.7\manager.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\project\Libreosteo\build\exe.win32-2.7\*.*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
 Source: "C:\project\Libreosteo\build\exe.win32-2.7\Libreosteo.url"; DestDir: "{app}"
@@ -76,11 +76,12 @@ Name : inituser ; Description: {cm:inituser} ; Flags:checkedonce;
 [Run]
 Filename: "{app}\manager.exe"; Parameters: "migrate"; StatusMsg: "{cm:installingdb}"; Flags: runhidden;
 Filename: "{cmd}" ; Parameters: "/c echo from django.contrib.auth.models import User;User.objects.create_superuser('{code:GetLogin}', '', '{code:GetPassword}') | ""{app}\manager.exe"" ""shell"" "; StatusMsg: "{cm:installinguser}"; Tasks: inituser; Flags : runhidden;
-Filename: "{app}\Libreosteo.exe"; Parameters: "--startup auto install"; StatusMsg: "{cm:installingservice}"; Flags: runhidden;
-Filename: "{app}\Libreosteo.exe"; Parameters: "start"; StatusMsg: "{cm:startingservice}"; Flags: runhidden;
+Filename: "{app}\LaunchServ.exe"; Parameters: "-install"; StatusMsg: "{cm:installingservice}"; Flags: runhidden
+Filename: "{app}\LaunchServ.exe"; Parameters: "-start"; StatusMsg: "{cm:startingservice}"; Flags: runhidden;
 
 [UninstallRun]
-Filename: "{app}\Libreosteo.exe"; Parameters: "remove"; StatusMsg: "{cm:uninstallingservice}"; Flags: runhidden;
+Filename: "{app}\LaunchServ.exe"; Parameters: "-stop"; StatusMsg: "{cm:uninstallingservice}"; Flags: runhidden
+Filename: "{app}\LaunchServ.exe"; Parameters: "-uninstall"; StatusMsg: "{cm:uninstallingservice}"; Flags: runhidden
 
 [code]
 var
@@ -120,3 +121,25 @@ begin
     Result := not IsTaskSelected('inituser');
 end;
 
+
+function CreateLaunchServIni(): boolean;
+var
+  fileName : string;
+  lines : TArrayOfString;
+begin
+  Result := true;
+  fileName := ExpandConstant('{app}\LaunchServ.ini');
+  SetArrayLength(lines, 5);
+  lines[0] := 'Name = LibreosteoService';
+  lines[1] := 'Description = Libreosteo Service';
+  lines[2] := ExpandConstant('Executable = "{app}\Libreosteo.exe');
+  lines[3] := ExpandConstant('WorkDir = "{app}"');
+  lines[4] := ExpandConstant('SingleInstance = 1');
+  Result := SaveStringsToFile(filename,lines,true);
+  exit;
+end;
+
+procedure InstallLaunchServIni();
+begin
+  CreateLaunchServIni();
+end;
