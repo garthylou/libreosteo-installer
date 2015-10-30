@@ -2,9 +2,9 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Libreosteo"
-#define MyAppVersion "0.2.1"
+#define MyAppVersion "0.4.2"
 #define MyAppPublisher "Libreosteo"
-#define MyAppURL "http://libreosteo.olympe.in"
+#define MyAppURL "http://libreosteo.github.io"
 #define MyAppExeName "Libreosteo.exe"
 
 [Setup]
@@ -22,7 +22,7 @@ AppUpdatesURL={#MyAppURL}
 DefaultDirName={pf}\{#MyAppName}
 DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
-LicenseFile=C:\project\Libreosteo\LICENCE.md
+LicenseFile=C:\Users\jb\Documents\dev\libreosteo\Libreosteo\LICENCE.md
 OutputBaseFilename=setup
 Compression=lzma
 SolidCompression=yes
@@ -32,10 +32,10 @@ Name: en; MessagesFile: "compiler:Default.isl"
 Name: fr; MessagesFile: "compiler:Languages\French.isl"
 
 [Files]
-Source: "C:\project\Libreosteo\build\exe.win32-2.7\Libreosteo.exe"; DestDir: "{app}"; AfterInstall: InstallLaunchServIni ; Flags: ignoreversion
-Source: "C:\project\Libreosteo\build\exe.win32-2.7\manager.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\project\Libreosteo\build\exe.win32-2.7\*.*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
-Source: "C:\project\Libreosteo\build\exe.win32-2.7\Libreosteo.url"; DestDir: "{app}"
+Source: "C:\Users\jb\Documents\dev\libreosteo\Libreosteo\build\exe.win32-2.7\Libreosteo.exe"; DestDir: "{app}"; AfterInstall: InstallLaunchServIni ; Flags: ignoreversion
+Source: "C:\Users\jb\Documents\dev\libreosteo\Libreosteo\build\exe.win32-2.7\manager.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\jb\Documents\dev\libreosteo\Libreosteo\build\exe.win32-2.7\*.*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
+Source: "C:\Users\jb\Documents\dev\libreosteo\Libreosteo\build\exe.win32-2.7\Libreosteo.url"; DestDir: "{app}"
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
