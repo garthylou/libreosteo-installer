@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Libreosteo"
-#define MyAppVersion "0.4.2"
+#define MyAppVersion "0.6.0"
 #define MyAppPublisher "Libreosteo"
 #define MyAppURL "http://libreosteo.github.io"
 #define MyAppExeName "Libreosteo.exe"
@@ -22,7 +22,7 @@ AppUpdatesURL={#MyAppURL}
 DefaultDirName={pf}\{#MyAppName}
 DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
-LicenseFile=C:\Users\jb\Documents\dev\libreosteo\Libreosteo\LICENCE.md
+LicenseFile=C:\Users\jb\libreosteo\LICENCE.md
 OutputBaseFilename=setup
 Compression=lzma
 SolidCompression=yes
@@ -32,16 +32,18 @@ Name: en; MessagesFile: "compiler:Default.isl"
 Name: fr; MessagesFile: "compiler:Languages\French.isl"
 
 [Files]
-Source: "C:\Users\jb\Documents\dev\libreosteo\Libreosteo\build\exe.win32-2.7\Libreosteo.exe"; DestDir: "{app}"; AfterInstall: InstallLaunchServIni ; Flags: ignoreversion
-Source: "C:\Users\jb\Documents\dev\libreosteo\Libreosteo\build\exe.win32-2.7\manager.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jb\Documents\dev\libreosteo\Libreosteo\build\exe.win32-2.7\*.*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
-Source: "C:\Users\jb\Documents\dev\libreosteo\Libreosteo\build\exe.win32-2.7\Libreosteo.url"; DestDir: "{app}"
+Source: "C:\Users\jb\libreosteo\build\exe.win32-2.7\Libreosteo.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\jb\libreosteo\build\exe.win32-2.7\manager.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\jb\libreosteo\build\exe.win32-2.7\*.*"; Excludes : "db.sqlite3*,access.log,errors.log,whoosh_index"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
+Source: "C:\Users\jb\libreosteo\build\exe.win32-2.7\Libreosteo.url"; DestDir: "{app}"
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
 ; Name: "{group}\{#MyAppName} (Service)"; Filename: "{app}\{#MyAppExeName}"
 Name: "{group}\{#MyAppName}"; Filename: "{app}\Libreosteo.url" ; IconFilename : "{app}\static\images\icon.ico"
 Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
+Name: "{userdesktop}\{#MyAppName}"; Filename: "{app}\Libreosteo.url"; \
+    IconFilename: "{app}\static\images\icon.ico"; Tasks: desktopicon
 
 [CustomMessages]
 ; Français
@@ -70,76 +72,17 @@ en.installingservice=Installing the service
 en.startingservice=Starting the service
 en.uninstallingservice=Uninstalling the service
 
-[Tasks]
-Name : inituser ; Description: {cm:inituser} ; Flags:checkedonce;
 
 [Run]
+Filename: "{app}\Libreosteo.exe"; Parameters: "stop"; StatusMsg: "{cm:uninstallingservice}"; Flags: runhidden
 Filename: "{app}\manager.exe"; Parameters: "migrate"; StatusMsg: "{cm:installingdb}"; Flags: runhidden;
-Filename: "{cmd}" ; Parameters: "/c echo from django.contrib.auth.models import User;User.objects.create_superuser('{code:GetLogin}', '', '{code:GetPassword}') | ""{app}\manager.exe"" ""shell"" "; StatusMsg: "{cm:installinguser}"; Tasks: inituser; Flags : runhidden;
-Filename: "{app}\LaunchServ.exe"; Parameters: "-install"; StatusMsg: "{cm:installingservice}"; Flags: runhidden
-Filename: "{app}\LaunchServ.exe"; Parameters: "-start"; StatusMsg: "{cm:startingservice}"; Flags: runhidden;
+Filename: "{app}\Libreosteo.exe"; Parameters: "--startup auto install"; StatusMsg: "{cm:installingservice}"; Flags: runhidden
+Filename: "{app}\Libreosteo.exe"; Parameters: "start"; StatusMsg: "{cm:installingservice}"; Flags: runhidden
 
 [UninstallRun]
-Filename: "{app}\LaunchServ.exe"; Parameters: "-stop"; StatusMsg: "{cm:uninstallingservice}"; Flags: runhidden
-Filename: "{app}\LaunchServ.exe"; Parameters: "-uninstall"; StatusMsg: "{cm:uninstallingservice}"; Flags: runhidden
+Filename: "{app}\Libreosteo.exe"; Parameters: "stop"; StatusMsg: "{cm:uninstallingservice}"; Flags: runhidden
+Filename: "{app}\Libreosteo.exe"; Parameters: "remove"; StatusMsg: "{cm:uninstallingservice}"; Flags: runhidden
 
-[code]
-var
-  Page: TInputQueryWizardPage;
-  FormPageID : Integer;
-
-procedure InitializeWizard();
-begin
-  Page := CreateInputQueryPage(wpSelectTasks, ExpandConstant('{cm:mainusertitle}'),ExpandConstant('{cm:mainusersubtitle}'),ExpandConstant('{cm:mainuserdescription}'));
-
-  // Add items (False means it's not a password edit)
-  Page.Add(ExpandConstant('{cm:login}'), False);
-  Page.Add(ExpandConstant('{cm:password}'), True);
-
-  // Set initial values (optional)
-  Page.Values[0] := ExpandConstant('{username}');
-  FormPageID := Page.ID;
-end;
-
-function GetLogin(Param: String): String;
-begin
-  Result := Page.Values[0];
-end;
-
-function GetPassword(Param: String): String;
-begin
-  Result := Page.Values[1];
-end;
-
-function ShouldSkipPage(PageID: Integer): Boolean;
-begin
-  // initialize result to not skip any page (not necessary, but safer)
-  Result := False;
-  // if the page that is asked to be skipped is your custom page, then...
-  if PageID = FormPageID then
-    // if the component is not selected, skip the page
-    Result := not IsTaskSelected('inituser');
-end;
-
-
-function CreateLaunchServIni(): boolean;
-var
-  fileName : string;
-  lines : TArrayOfString;
-begin
-  Result := true;
-  fileName := ExpandConstant('{app}\LaunchServ.ini');
-  SetArrayLength(lines, 5);
-  lines[0] := 'Name = LibreosteoService';
-  lines[1] := 'Description = Libreosteo Service';
-  lines[2] := ExpandConstant('Executable = "{app}\Libreosteo.exe');
-  lines[3] := ExpandConstant('WorkDir = "{app}"');
-  lines[4] := ExpandConstant('SingleInstance = 1');
-  Result := SaveStringsToFile(filename,lines,true);
-  exit;
-end;
-
-procedure InstallLaunchServIni();
-begin
-  CreateLaunchServIni();
-end;
+[Tasks]
+Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; \
+    GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
