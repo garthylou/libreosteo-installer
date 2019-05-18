@@ -1,6 +1,6 @@
 #!/bin/bash
 
-/Applications/Libreosteo.app/Contents/MacOS/manage migrate --noinput
+/Applications/LibreosteoService.app/Contents/MacOS/manage migrate --noinput
 myuser=${SUDO_USER:-$USER}
 chown -R ${myuser} "/Users/${myuser}/Library/Application Support/Libreosteo"
 agents_dir="/Users/${myuser}/Library/LaunchAgents"
@@ -13,10 +13,10 @@ echo "<dict>"
 echo "	<key>KeepAlive</key>"
 echo "	<true/>"
 echo "	<key>Label</key>"
-echo "	<string>org.libreosteo.macos.Libreosteo</string>"
+echo "	<string>org.libreosteo.macos.LibreosteoService</string>"
 echo "	<key>ProgramArguments</key>"
 echo "	<array>"
-echo "		<string>/Applications/Libreosteo.app/Contents/MacOS/server</string>"
+echo "		<string>/Applications/LibreosteoService.app/Contents/MacOS/LibreosteoService</string>"
 echo "	</array>"
 echo "	<key>RunAtLoad</key>"
 echo "	<true/>"
@@ -24,9 +24,9 @@ echo "	<key>ProcessType</key>"
 echo "	<string>Background</string>"
 echo "</dict>"
 echo "</plist>"
-) > ${agents_dir}/org.libreosteo.macos.Libreosteo.plist
-chmod +x "${agents_dir}/org.libreosteo.macos.Libreosteo.plist"
-chmod -R 777 /Applications/Libreosteo.app/Contents/Resources/static/CACHE
-chown -R ${myuser} "${agents_dir}/org.libreosteo.macos.Libreosteo.plist"
-sudo -u ${myuser} launchctl load -w "${agents_dir}/org.libreosteo.macos.Libreosteo.plist"
-sudo -u ${myuser} launchctl start org.libreosteo.macos.Libreosteo
+) > ${agents_dir}/org.libreosteo.macos.LibreosteoService.plist
+chmod +x "${agents_dir}/org.libreosteo.macos.LibreosteoService.plist"
+chmod -R 777 /Applications/LibreosteoService.app/Contents/Resources/static/CACHE
+chown -R ${myuser} "${agents_dir}/org.libreosteo.macos.LibreosteoService.plist"
+sudo -u ${myuser} launchctl load -w "${agents_dir}/org.libreosteo.macos.LibreosteoService.plist"
+sudo -u ${myuser} launchctl start org.libreosteo.macos.LibreosteoService
