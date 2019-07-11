@@ -4,8 +4,10 @@
 #define MyAppName "Libreosteo"
 #define MyAppVersion "0.6.0"
 #define MyAppPublisher "Libreosteo"
-#define MyAppURL "http://libreosteo.github.io"
+#define MyAppURL "https://libreosteo.github.io"
 #define MyAppExeName "Libreosteo.exe"
+#define BuildPath2 "exe.win32-2.7"
+#define BuildPath3 "exe.win-amd64-3.6"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
@@ -22,7 +24,7 @@ AppUpdatesURL={#MyAppURL}
 DefaultDirName={pf}\{#MyAppName}
 DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
-LicenseFile=C:\Users\jb\libreosteo\LICENCE.md
+LicenseFile=C:\Users\jb\libreosteo\LICENSE.md
 OutputBaseFilename=setup
 Compression=lzma
 SolidCompression=yes
@@ -32,10 +34,10 @@ Name: en; MessagesFile: "compiler:Default.isl"
 Name: fr; MessagesFile: "compiler:Languages\French.isl"
 
 [Files]
-Source: "C:\Users\jb\libreosteo\build\exe.win32-2.7\Libreosteo.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jb\libreosteo\build\exe.win32-2.7\manager.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jb\libreosteo\build\exe.win32-2.7\*.*"; Excludes : "db.sqlite3*,access.log,errors.log,whoosh_index"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
-Source: "C:\Users\jb\libreosteo\build\exe.win32-2.7\Libreosteo.url"; DestDir: "{app}"
+Source: "C:\Users\jb\libreosteo\build\{#BuildPath3}\Libreosteo.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\jb\libreosteo\build\{#BuildPath3}\manager.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\jb\libreosteo\build\{#BuildPath3}\*.*"; Excludes : "db.sqlite3*,access.log,errors.log,whoosh_index"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
+Source: "C:\Users\jb\libreosteo\build\{#BuildPath3}\Libreosteo.url"; DestDir: "{app}"
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
