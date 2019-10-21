@@ -78,6 +78,7 @@ en.uninstallingservice=Uninstalling the service
 [Run]
 Filename: "{app}\Libreosteo.exe"; Parameters: "stop"; StatusMsg: "{cm:uninstallingservice}"; Flags: runhidden
 Filename: "{app}\manager.exe"; Parameters: "migrate"; StatusMsg: "{cm:installingdb}"; Flags: runhidden;
+Filename: "{app}\manager.exe"; Parameters: "rebuild_index --noinput"; StatusMsg: "{cm:installingdb}"; Flags: runhidden;
 Filename: "{app}\Libreosteo.exe"; Parameters: "--startup auto install"; StatusMsg: "{cm:installingservice}"; Flags: runhidden
 Filename: "{app}\Libreosteo.exe"; Parameters: "start"; StatusMsg: "{cm:installingservice}"; Flags: runhidden
 
