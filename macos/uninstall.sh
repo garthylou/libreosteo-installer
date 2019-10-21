@@ -1,5 +1,6 @@
 #!/bin/bash
 echo "Stopping LibreosteoService"
+killall LibreosteoService
 launchctl stop org.libreosteo.macos.LibreosteoService
 echo "Removing agent LibreosteoService"
 launchctl remove org.libreosteo.macos.LibreosteoService

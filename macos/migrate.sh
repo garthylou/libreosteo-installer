@@ -51,10 +51,15 @@ function install_uninstaller() {
   chmod +x $script_dir/uninstall.sh
 }
 
+function update_reindex() {
+   /Applications/LibreosteoService.app/Contents/MacOS/manage rebuild_index --noinput
+   chown -R ${myuser} "/Users/${myuser}/Library/Application Support/Libreosteo/whoosh_index"
+}
 
 #####
 
 migrate_db
+update_reindex
 remove_oldservice
 install_service
 install_uninstaller
